@@ -1,6 +1,8 @@
 services:
   api:
-    build: .
+    build:
+      context: .
+      target: development
     ports:
       - "${PORT:-3000}:3000"
     env_file:
@@ -10,7 +12,8 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-    command: npm run dev
+    command: >
+      sh -c "npm install && npm run dev"
 
 # Optional: Add PostgreSQL if not using Supabase cloud during local development
 # db:
