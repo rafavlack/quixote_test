@@ -1,0 +1,24 @@
+application:
+  name: "quixote-ai-wrapper"
+  project: "quixote-test"
+  organization: "rafavlack"
+  build:
+    builder: DOCKER
+    dockerfile_path: "Dockerfile"
+  services:
+    - name: "api"
+      image: "node:20-slim"
+      ports:
+        - name: "http"
+          port: 3000
+          public: true
+      instance:
+        min_running_instances: 1
+        max_running_instances: 1
+      auto_preview: true # This enables deployment for PRs/branches
+  environment_variables:
+    - key: "PORT"
+      value: "3000"
+    - key: "NODE_ENV"
+      value: "production"
+  # Note: Sensitive variables like SUPABASE_ANON_KEY should be added via Qovery Console as "Secret"
