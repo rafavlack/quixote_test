@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Usage-based AI Wrapper - Fullstack/Ops Technical Assessment",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "start": "node dist/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
