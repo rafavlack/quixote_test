@@ -7,9 +7,12 @@
 - **Node.js (ESM)**: Configured with ECMAScript Modules (`import/export`) for modern development standards.
 
 ### Deployment & Infrastructure
-- **Qovery**: The application is prepared for deployment on Qovery using the provided `Dockerfile` and `.qovery.yml` configuration.
-- **Infrastructure Note**: During the assessment, a full automated deployment to Qovery was planned. However, it was identified that Qovery's current community/free tier primarily supports local cluster installation on Linux (via Qovery CLI/Local Cluster), while cloud-managed clusters (AWS, GCP, DigitalOcean) are part of their paid plans for new accounts. To maintain the project's accessibility, the configuration remains ready for "Plug & Play" deployment once a compatible cluster is available.
-- **Docker**: For immediate evaluation, the `docker-compose.yml` provides a perfect mirror of the production environment.
+- **Qovery**: The application is fully prepared for deployment on Qovery, a powerful **Internal Developer Platform (IDP)** designed to bridge the gap between development and cloud infra.
+    - **Why Qovery?**: It provides a "Heroku-like" experience on top of your own cloud account, offering **GitOps** workflows, automated environment provisioning, and preview environments for every Pull Request.
+    - **Multi-Cloud Scalability**: Qovery excels in its ability to deploy and manage applications across multiple cloud providers like **AWS, Scaleway, GCP, and DigitalOcean** without complex Kubernetes configuration.
+    - **Ease of Deployment**: With the provided `Dockerfile` and `.qovery.yml`, the application can be seamlessly integrated into a Qovery cluster to gain benefits like auto-scaling, advanced monitoring, and managed database provisioning.
+- **Infrastructure Note**: During the assessment, a full automated deployment to Qovery was planned. However, it was identified that Qovery's current community/free tier primarily supports local cluster installation on Linux (via Qovery CLI/Local Cluster), while cloud-managed clusters are part of their professional tiers. To maintain the project's accessibility, the configuration remains ready for "Plug & Play" deployment once a compatible cluster is available.
+- **Docker**: For immediate evaluation, the `docker-compose.yml` provides a perfect mirror of the production environment, ensuring consistent behavior across different environments.
 
 ### Project Structure
 - **Hexagonal-ish Layered Architecture**:
