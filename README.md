@@ -79,8 +79,8 @@ To test the protected endpoints, you need a JWT (JSON Web Token). We've included
 3.  In Postman, go to the **Authorization** tab, select **Bearer Token**, and paste your token.
 
 ### Using Postman Collection
-A Postman collection is included in the root of the project to help you test all endpoints quickly.
-- **Import** the collection into Postman.
+A Postman collection is included in the project at `assets/postman/quixote_test.postman_collection.json` to help you test all endpoints quickly.
+- **Import** the collection from the path above into Postman.
 - **Set the token** in the Collection Authorization or at the request level.
 - **Test `/api/generate`**: Send a POST request with the following body:
   ```json
