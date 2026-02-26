@@ -68,6 +68,50 @@ tests/            # Unit tests (Jest)
 - `GET /api/usage`: Returns historical usage for the logged user.
 - `GET /api/billing`: Returns total tokens and estimated cost.
 
+### How to get a Bearer Token for Postman
+To test the protected endpoints, you need a JWT (JSON Web Token). We've included a script to easily get a token for a fixed test user:
+
+1.  Run the following command in your terminal:
+    ```bash
+    npx tsx src/scripts/auth-fixed-user.ts
+    ```
+2.  Copy the generated **Access Token (JWT)** from the console.
+3.  In Postman, go to the **Authorization** tab, select **Bearer Token**, and paste your token.
+
+### Using Postman Collection
+A Postman collection is included in the root of the project to help you test all endpoints quickly.
+- **Import** the collection into Postman.
+- **Set the token** in the Collection Authorization or at the request level.
+- **Test `/api/generate`**: Send a POST request with the following body:
+  ```json
+  {
+    "message": "Explain quantum physics in one sentence.",
+    "model": "google/gemini-2.0-flash-lite-preview-02-05:free"
+  }
+  ```
+  *(See `assets/test-evidence/api-generate.png` for a reference of a successful call).*
+
 ### Testing
 - **Unit Tests (Bonus)**: `npm test`
 - **Integration Tests (Manual)**: Run `npx tsx src/scripts/test-db-integration.ts` to verify database connectivity.
+
+## 4. Integration Evidence
+
+This section contains visual proof of the application's core functionality.
+
+### 4.1 API Health Check
+![Health Check](assets/test-evidence/health-check.png)
+*Response confirming the API is live and reachable.*
+
+### 4.2 AI Generation Proxy
+![AI Generation](assets/test-evidence/api-generate.png)
+*Example of a successful prompt proxying through OpenRouter with JWT authentication.*
+
+### 4.3 Database Usage Logs
+![Usage Logs](assets/test-evidence/usage-logs.png)
+*Confirmation of usage data being persisted in Supabase after an AI request.*
+
+### 4.4 Billing & Tokens Tracking
+![Billing Info](assets/test-evidence/billing-info.png)
+*Endpoint showing real-time token count and cost estimation for the user.*
+

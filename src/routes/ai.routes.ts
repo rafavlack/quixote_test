@@ -77,7 +77,7 @@ router.get('/usage', async (req: AuthRequest, res: Response) => {
 
         if (error) throw error;
 
-        res.json({ success: true, data });
+        res.json({ success: true, data: data || [] });
     } catch (error: any) {
         res.status(500).json({ success: false, message: error.message });
     }
