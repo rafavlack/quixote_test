@@ -3,9 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const stripe = new Stripe(process.env.STRIPE_API_KEY || '', {
-    apiVersion: '2025-02-11-preview', // Latest stable or preview version
-});
+const stripe = new Stripe(process.env.STRIPE_API_KEY || '');
 
 export class BillingService {
     /**
