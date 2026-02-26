@@ -1,0 +1,22 @@
+services:
+  api:
+    build: .
+    ports:
+      - "${PORT:-3000}:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run dev
+
+# Optional: Add PostgreSQL if not using Supabase cloud during local development
+# db:
+#   image: postgres:15
+#   environment:
+#     POSTGRES_DB: quixote_db
+#     POSTGRES_PASSWORD: password
+#   ports:
+#     - "5432:5432"
