@@ -1,0 +1,132 @@
+{
+  "info": {
+    "_postman_id": "8de54058-74d4-4511-b174-2045510b1576",
+    "name": "quixote_test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "18314568"
+  },
+  "item": [
+    {
+      "name": "check-service",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/health",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "api-generate",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"message\": \"Hola, ¿quién eres?\",\r\n    \"model\": \"openai/gpt-3.5-turbo\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/generate",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "generate"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "usage-logs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/usage",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "usage"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "billing-info",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/billing",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "billing"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImNlOGFhZjljLTBjYTktNDUzYi1hNWJjLTk4YTFiZTNjZTkwYSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2J5YnpqaWhrZHhtdGVhcWZvbXlqLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI3NjYxY2QzNy04NGNmLTRhNDMtYTMxMS1lNTYzMGRkOWU1N2UiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzcyMTM2OTU0LCJpYXQiOjE3NzIxMzMzNTQsImVtYWlsIjoidGVzdEBxdWl4b3RlLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzcyMTMzMzU0fV0sInNlc3Npb25faWQiOiJmMzhjOTEwOC0xMzJmLTQ3NGYtYTIyMi1hMDI2NjFjMjdmYjciLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.CBHsUgJvkSaLS_GDqme1vfdcYrB83Sel2riFTAFrfs5p7osg1RsXAA4qabYOSp2QKcqr2aEdPhtbs-7GDmCvgw",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
