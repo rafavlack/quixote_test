@@ -1,26 +1,30 @@
-import { Router, Request, Response } from 'express';
+import { Router, Response } from 'express';
 import { AIService } from '../services/ai.service.js';
 import { UsageService } from '../services/usage.service.js';
 import { BillingService } from '../services/billing.service.js';
 import { supabase } from '../config/supabase.js';
+import { authMiddleware, AuthRequest } from '../middleware/auth.middleware.js';
 import { z } from 'zod';
 
 const router = Router();
 
-// Validation schema
+// Apply auth middleware to all AI routes
+router.use(authMiddleware);
+
+// Validation schema (userId is no longer needed in body as it comes from Auth)
 const promptSchema = z.object({
     message: z.string().min(1),
-    model: z.string().optional(),
-    userId: z.string().uuid()
+    model: z.string().optional()
 });
 
 /**
  * Endpoint to generate AI response and track usage
  */
-router.post('/generate', async (req: Request, res: Response) => {
+router.post('/generate', async (req: AuthRequest, res: Response) => {
     try {
         const validatedData = promptSchema.parse(req.body);
-        const { message, model, userId } = validatedData;
+        const { message, model } = validatedData;
+        const userId = req.user!.id; // Guaranteed by authMiddleware
 
         // 1. Proxy request to LLM
         const aiResponse = await AIService.prompt(message, model);
@@ -59,12 +63,11 @@ router.post('/generate', async (req: Request, res: Response) => {
 });
 
 /**
- * Endpoint to get usage history (for the dashboard graph)
- * Role 2 requirement: "fetch and display usage data from the database"
+ * Endpoint to get usage history
  */
-router.get('/usage/:userId', async (req: Request, res: Response) => {
+router.get('/usage', async (req: AuthRequest, res: Response) => {
     try {
-        const { userId } = req.params;
+        const userId = req.user!.id;
 
         const { data, error } = await supabase
             .from('usage_logs')
@@ -82,13 +85,11 @@ router.get('/usage/:userId', async (req: Request, res: Response) => {
 
 /**
  * Endpoint to get current billing info
- * Role 2 requirement: "Current Bill section"
  */
-router.get('/billing/:userId', async (req: Request, res: Response) => {
+router.get('/billing', async (req: AuthRequest, res: Response) => {
     try {
-        const { userId } = req.params;
+        const userId = req.user!.id;
 
-        // Aggregate usage for the current month
         const { data, error } = await supabase
             .from('usage_logs')
             .select('tokens_count')
@@ -97,7 +98,7 @@ router.get('/billing/:userId', async (req: Request, res: Response) => {
         if (error) throw error;
 
         const totalTokens = data.reduce((sum, log) => sum + log.tokens_count, 0);
-        const estimatedCost = (totalTokens / 1000) * 0.02; // Dummy calculation: $0.02 per 1k tokens
+        const estimatedCost = (totalTokens / 1000) * 0.02;
 
         res.json({
             success: true,
