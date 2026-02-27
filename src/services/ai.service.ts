@@ -17,10 +17,23 @@ export interface AIResponse {
 }
 
 export class AIService {
-    static async prompt(message: string, model: string = 'google/gemini-2.0-flash-lite-preview-02-05:free'): Promise<AIResponse> {
+    static ALLOWED_MODELS = [
+        'google/gemini-2.0-flash-lite-preview-02-05:free',
+        'google/gemini-2.5-pro',
+        'openai/gpt-3.5-turbo',
+        'openai/gpt-4',
+        'anthropic/claude-3-haiku',
+        'liquid/lfm-2.5-1.2b-instruct:free'
+    ];
+
+    static async prompt(message: string, model: string = 'liquid/lfm-2.5-1.2b-instruct:free'): Promise<AIResponse> {
         try {
             if (!OPENROUTER_API_KEY) {
                 throw new Error('OPENROUTER_API_KEY is missing');
+            }
+
+            if (!this.ALLOWED_MODELS.includes(model)) {
+                throw new Error(`Model ${model} is not allowed.`);
             }
 
             const response = await axios.post(
@@ -50,8 +63,13 @@ export class AIService {
                     total_tokens: data.usage.total_tokens,
                 },
             };
-        } catch (error: any) {
-            console.error('Error in AIService:', error.response?.data || error.message);
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                console.error('Error in AIService:', error.response?.data || error.message);
+            } else if (error instanceof Error) {
+                console.error('Error in AIService:', error.message);
+                throw error; // Rethrow allowlist or API key missing
+            }
             throw new Error('Failed to fetch from LLM');
         }
     }

@@ -1,15 +1,19 @@
 import { supabase } from '../config/supabase.js';
 
-const TEST_USER_ID = '77ea745d-40ba-4fdb-9194-705096d77ca0';
+const TEST_USER_ID = process.env.TEST_USER_ID || '';
+const TEST_USER_EMAIL = process.env.TEST_USER_EMAIL || '';
 
 async function runDetailedTest() {
+    if (!TEST_USER_ID || !TEST_USER_EMAIL) {
+        throw new Error('TEST_USER_ID and TEST_USER_EMAIL required in environment');
+    }
     console.log('--- STARTING DETAILED SUPABASE TEST ---');
 
     // 1. Check Profile
     console.log('1. Upserting profile...');
     const { data: profile, error: pError } = await supabase
         .from('profiles')
-        .upsert({ id: TEST_USER_ID, email: 'rafavlack@gmail.com' })
+        .upsert({ id: TEST_USER_ID, email: TEST_USER_EMAIL } as any)
         .select();
 
     if (pError) console.error('Profile Error:', pError);
@@ -24,7 +28,7 @@ async function runDetailedTest() {
             model_used: 'test-model',
             tokens_count: 100,
             api_request_status: 200
-        }])
+        }] as any)
         .select();
 
     if (lError) console.error('Log Error:', lError);

@@ -5,7 +5,7 @@ export class UsageService {
     static async logUsage(log: UsageLog) {
         const { data, error } = await supabase
             .from('usage_logs')
-            .insert([log]);
+            .insert([log] as any);
 
         if (error) {
             console.error('Error logging usage:', error);

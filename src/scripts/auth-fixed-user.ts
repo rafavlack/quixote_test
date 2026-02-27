@@ -8,10 +8,13 @@ const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || '';
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-const FIXED_EMAIL = 'test@quixote.com';
-const FIXED_PASSWORD = 'Password123!';
+const FIXED_EMAIL = process.env.TEST_USER_EMAIL || '';
+const FIXED_PASSWORD = process.env.TEST_USER_PASSWORD || '';
 
 async function getAuth() {
+    if (!FIXED_EMAIL || !FIXED_PASSWORD) {
+        throw new Error('TEST_USER_EMAIL and TEST_USER_PASSWORD must be provided in environment variables');
+    }
     console.log(`Attempting login for: ${FIXED_EMAIL}...`);
 
     // 1. Intentar iniciar sesión

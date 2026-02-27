@@ -13,3 +13,20 @@ export interface UsageLog {
     api_request_status: number;
     created_at?: string;
 }
+
+export interface Database {
+    public: {
+        Tables: {
+            profiles: {
+                Row: UserProfile;
+                Insert: Omit<UserProfile, 'is_active'> & { is_active?: boolean };
+                Update: Partial<UserProfile>;
+            };
+            usage_logs: {
+                Row: UsageLog;
+                Insert: Omit<UsageLog, 'id' | 'created_at'> & { id?: string; created_at?: string };
+                Update: Partial<UsageLog>;
+            };
+        };
+    };
+}

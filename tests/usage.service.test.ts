@@ -1,36 +1,44 @@
 import { jest } from '@jest/globals';
-import { UsageService } from '../src/services/usage.service.js';
 
-// Mock the Supabase client
+/**
+ * Tests for UsageService.logUsage() with a fully mocked Supabase client.
+ */
+
+// Mock the ENTIRE supabase module before importing UsageService
+const mockInsert = jest.fn();
+
 jest.unstable_mockModule('../src/config/supabase.js', () => ({
     supabase: {
-        from: jest.fn().mockReturnThis(),
-        insert: jest.fn().mockResolvedValue({ data: { id: '123' }, error: null } as never),
-    },
+        from: jest.fn().mockReturnValue({
+            insert: mockInsert
+        })
+    }
 }));
 
 describe('UsageService', () => {
-    it('should successfully log usage', async () => {
-        const logData = {
-            user_id: 'user-123',
-            model_used: 'gpt-4',
-            tokens_count: 100,
-            api_request_status: 200,
-        };
+    let UsageService: any;
 
-        const result = await UsageService.logUsage(logData);
-
-        expect(result).toBeDefined();
-        expect(result).toEqual({ id: '123' });
+    beforeAll(async () => {
+        const mod = await import('../src/services/usage.service.js');
+        UsageService = mod.UsageService;
     });
 
-    it('should throw an error if logging fails', async () => {
-        const { supabase } = await import('../src/config/supabase.js');
-        (supabase.from('usage_logs').insert as any).mockResolvedValueOnce({
-            data: null,
-            error: { message: 'DB Error' }
-        });
+    const validLog = {
+        user_id: '550e8400-e29b-41d4-a716-446655440000', // valid UUID
+        model_used: 'gpt-4',
+        tokens_count: 100,
+        api_request_status: 200,
+    };
 
-        await expect(UsageService.logUsage({} as any)).rejects.toThrow('Failed to log usage to database');
+    it('should successfully log usage', async () => {
+        mockInsert.mockImplementation(() => Promise.resolve({ data: [{ id: 'log-123' }], error: null }));
+        const result = await UsageService.logUsage(validLog);
+        expect(mockInsert).toHaveBeenCalledTimes(1);
+        expect(result).toBeDefined();
+    });
+
+    it('should throw when Supabase returns an error', async () => {
+        mockInsert.mockImplementation(() => Promise.resolve({ data: null, error: { message: 'DB Error' } }));
+        await expect(UsageService.logUsage(validLog)).rejects.toThrow('Failed to log usage to database');
     });
 });

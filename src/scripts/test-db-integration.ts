@@ -1,9 +1,13 @@
 import { supabase } from '../config/supabase.js';
 import { UsageService } from '../services/usage.service.js';
 
-const TEST_USER_ID = '77ea745d-40ba-4fdb-9194-705096d77ca0';
+const TEST_USER_ID = process.env.TEST_USER_ID || '';
+const TEST_USER_EMAIL = process.env.TEST_USER_EMAIL || '';
 
 async function runIntegrationTest() {
+    if (!TEST_USER_ID || !TEST_USER_EMAIL) {
+        throw new Error('TEST_USER_ID and TEST_USER_EMAIL required in environment');
+    }
     console.log('--- STARTING INTEGRATION TEST ---');
 
     try {
@@ -13,9 +17,9 @@ async function runIntegrationTest() {
             .from('profiles')
             .upsert({
                 id: TEST_USER_ID,
-                email: 'rafavlack@gmail.com',
+                email: TEST_USER_EMAIL,
                 is_active: true
-            })
+            } as any)
             .select();
 
         if (profileError) {
@@ -43,7 +47,7 @@ async function runIntegrationTest() {
             .from('usage_logs')
             .select('*')
             .eq('user_id', TEST_USER_ID)
-            .limit(1);
+            .limit(1) as { data: any[], error: any };
 
         if (fetchError || !logs || logs.length === 0) {
             throw new Error('Could not find the logged data in Supabase');
@@ -52,9 +56,11 @@ async function runIntegrationTest() {
         console.log('Verification: SUCCESS');
         console.log('--- INTEGRATION TEST PASSED ---');
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('--- INTEGRATION TEST FAILED ---');
-        console.error('Error:', error.message);
+        if (error instanceof Error) {
+            console.error('Error:', error.message);
+        }
     }
 }
 

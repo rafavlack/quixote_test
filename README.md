@@ -17,7 +17,7 @@
 ### Project Structure
 - **Hexagonal-ish Layered Architecture**:
     - `src/config`: Client initializations (Supabase, Stripe).
-    - `src/controllers` & `src/routes`: Request handling and validation.
+    - `src/routes`: Request handling and validation.
     - `src/middleware`: Custom authentication and security.
     - `src/services`: Core logic (AI Proxy, Usage Tracking, Billing).
     - `src/models`: Data definitions.
@@ -25,7 +25,7 @@
 ### Key Decisions
 - **Unified Proxy (OpenRouter)**: Selected to provide access to multiple LLMs via a single API, fulfilling the "Proxy to LLM" requirement efficiently.
 - **Supabase Auth & RLS**: Leveraged for security. Even though the Frontend handles the login UI, the Backend validates every request using a custom JWT middleware.
-- **Usage-Based Billing**: Integrated with Stripe and backed by a PostgreSQL schema in Supabase to track every token processed.
+- **Usage-Based Billing**: Integrated with Stripe and backed by a PostgreSQL schema in Supabase to track every token processed. (Note: Stripe integration is partially a stub/demonstration: it logs intention to console unless a valid `STRIPE_API_KEY` is provided, in which case it dynamically queries a customer's subscription item to report metered usage).
 - **Branching Strategy**: Used `develop` for integration and `main` for stable releases to simulate a professional DevOps environment.
 
 ## 2. Project Structure
@@ -115,3 +115,15 @@ This section contains visual proof of the application's core functionality.
 ![Billing Info](assets/test-evidence/billing-info.png)
 *Endpoint showing real-time token count and cost estimation for the user.*
 
+# Mejoras del Servicio
+
+## Validación Dinámica de Modelos Disponibles en OpenRouter
+
+Mediante una llamada a la API de OpenRouter es posible obtener el listado completo y actualizado de modelos disponibles en tiempo real:
+
+```bash
+curl --location 'https://openrouter.ai/api/v1/models' \
+--header 'Authorization: Bearer TU_API_KEY'
+```
+
+Esto permite validar dinámicamente que el modelo que la aplicación intenta utilizar realmente exista y esté disponible antes de realizar una solicitud al endpoint de generación.

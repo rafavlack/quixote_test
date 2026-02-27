@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { supabase } from '../config/supabase.js';
 
 export interface AuthRequest extends Request {
-    user?: {
+    user: {
         id: string;
         email?: string;
     };

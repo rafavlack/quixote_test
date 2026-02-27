@@ -1,8 +1,11 @@
 import { supabase } from '../config/supabase.js';
 
-const TEST_USER_ID = '77ea745d-40ba-4fdb-9194-705096d77ca0';
+const TEST_USER_ID = process.env.TEST_USER_ID || '';
 
 async function verifyFinalData() {
+    if (!TEST_USER_ID) {
+        throw new Error('TEST_USER_ID required in environment');
+    }
     console.log('--- FINAL DATA VERIFICATION ---');
 
     try {
@@ -11,19 +14,19 @@ async function verifyFinalData() {
             .from('profiles')
             .select('*')
             .eq('id', TEST_USER_ID)
-            .single();
+            .single() as { data: any, error: any };
 
         if (pError) {
             console.log('Profile fetch error (this is normal if RLS is strict):', pError.message);
         } else {
-            console.log('✓ Profile found:', profile.email);
+            console.log('✓ Profile found:', profile?.email);
         }
 
         // 2. Check Usage Logs
         const { data: logs, error: lError } = await supabase
             .from('usage_logs')
             .select('*')
-            .eq('user_id', TEST_USER_ID);
+            .eq('user_id', TEST_USER_ID) as { data: any[], error: any };
 
         if (lError) {
             console.log('Logs fetch error (this is normal if RLS is strict):', lError.message);
@@ -46,8 +49,10 @@ async function verifyFinalData() {
             console.log('NOTE: If you see 0 entries, it might be due to Row Level Security (RLS). Ensure "Enable read for everyone" or a similar policy is active for debugging.');
         }
 
-    } catch (error: any) {
-        console.error('Test error:', error.message);
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error('Test error:', error.message);
+        }
     }
 }
 
